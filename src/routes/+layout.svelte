@@ -1,11 +1,16 @@
-<script lang='ts'>
-	// The ordering of these imports is critical to your app working properly
-	import '@skeletonlabs/skeleton/themes/theme-sahara.css';
-	// If you have source.organizeImports set to true in VSCode, then it will auto change this ordering
-	import '@skeletonlabs/skeleton/styles/all.css';
-	// Most of your app wide CSS should be put in this file
-	import '../app.postcss';
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import { initFirebase } from '$lib/client/firebase';
+	import { auth } from '../stores/auth';
+
 	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
+	import '@skeletonlabs/skeleton/themes/theme-sahara.css';
+	import '@skeletonlabs/skeleton/styles/all.css';
+	import '../app.postcss';
+	import { applyAction, enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
+
+	onMount(initFirebase);
 </script>
 
 <!-- App Shell -->
@@ -14,9 +19,33 @@
 		<!-- App Bar -->
 		<AppBar>
 			<svelte:fragment slot="lead">
-				<strong class="text-xl uppercase">Skeleton</strong>
+				<a href="/">
+					<strong class="text-xl uppercase">Skeleton</strong>
+				</a>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
+				{#if $auth?.uid}
+					<a class="btn btn-sm variant-ghost-surface" href="/dashboard"> Dashboard </a>
+					<form
+						action="/logout"
+						method="POST"
+						use:enhance={() => {
+							return async ({ result }) => {
+								if (result.type === 'error') {
+									await applyAction(result);
+								} else {
+									await invalidateAll();
+								}
+							};
+						}}
+					>
+						<button type="submit" class="btn btn-sm variant-ghost-surface"> Logout </button>
+					</form>
+				{:else}
+					<a class="btn btn-sm variant-ghost-surface" href="/login"> Login </a>
+					<a class="btn btn-sm variant-ghost-surface" href="/register"> Register </a>
+				{/if}
+
 				<a
 					class="btn btn-sm variant-ghost-surface"
 					href="https://discord.gg/EXqV7W8MtY"
