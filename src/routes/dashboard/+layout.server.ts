@@ -1,9 +1,10 @@
 import type { LayoutServerLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
+import { handleLoginRedirect } from '$lib/utils/helpers';
 
-export const load: LayoutServerLoad = async ({ locals, cookies }) => {
-	if (!locals.user) {
-		throw redirect(302, '/login');
+export const load: LayoutServerLoad = async (event) => {
+	if (!event.locals.user) {
+		throw redirect(302, handleLoginRedirect(event));
 	}
 
 	// if (locals?.user?.role != 'admin') {

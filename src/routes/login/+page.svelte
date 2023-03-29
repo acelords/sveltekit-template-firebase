@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { applyAction, deserialize } from '$app/forms';
 	import { goto, invalidateAll } from '$app/navigation';
+	import { page } from '$app/stores';
 	import type { ActionResult } from '@sveltejs/kit';
 	import {
 		getAuth,
@@ -13,6 +14,9 @@
 	import type { ActionData } from './$types';
 
 	export let form: ActionData;
+
+	let message: string | null;
+	$: message = $page.url.searchParams.get('message') ?? null;
 
 	onMount(() => {
 		return auth.subscribe((user) => {
@@ -99,6 +103,10 @@
 			<div class="text-red-700">
 				{form.message}
 			</div>
+		{/if}
+
+		{#if message}
+			<p class="alert">{message}</p>
 		{/if}
 
 		<form class="mt-4" method="POST" on:submit|preventDefault={handleSubmit}>

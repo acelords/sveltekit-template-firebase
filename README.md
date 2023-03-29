@@ -2,9 +2,15 @@
 **Authentication and session management via Firebase Admin Only**
 Firebase Admin maintains the user hydration to `locals.user` via `hook.server.ts`
 
-### Shortcomings
+### Caverts
 - Cannot get full user info. Only `uid` and `email` (unless using a second request to `getUser()`)
 - Others
+
+### Techs
+- [Tailwindcss](https://tailwindcss.com)
+- [Skeleton UI](https://www.skeleton.dev)
+- [Firebase](https://console.firebase.google.com/)
+- [Firebase Admin](https://console.firebase.google.com/)
 
 
 
